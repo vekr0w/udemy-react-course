@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './App.module.css';
-import Person from "../components/Persons/Person/Person";
-
+import Persons from '../components/Persons/Persons'
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
   state = {
@@ -27,7 +27,6 @@ class App extends Component {
   }
 
   deletePersonHandler = (personIndex) => {
-    //const persons = this.state.persons.slice(); -> get a new copy of the persons array not using reference. slice or spread both work fine.
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({ persons: persons })
@@ -38,54 +37,22 @@ class App extends Component {
     this.setState({ showPersons: !doesShow });
   }
 
-
-
   render() {
-
     let persons = null;
-    let btnClass = '';
-
     if (this.state.showPersons) {
-      persons = (
-        <div >
-          {this.state.persons.map((person, index) => {
-            return <Person
-              click={() => this.deletePersonHandler(index)}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changed={(event) => this.nameChangedHandler(event, person.id)} />
-          })}
-        </div>
-      );
-
-      btnClass = styles.Red;
-
+      persons = <Persons
+        persons={this.state.persons}
+        clicked={this.deletePersonHandler}
+        changed={this.nameChangedHandler} />;
     }
-
-    const assignedClasses = [];
-    if (this.state.persons.length <= 2) {
-      assignedClasses.push(styles.red);
-    }
-    if (this.state.persons.length <= 1) {
-      assignedClasses.push(styles.bold);
-    }
-
-
     return (
-
       <div className={styles.App}>
-        <h1>Hi, I'm a react App</h1>
-        <p className={assignedClasses.join(' ')}>This is really working!</p>
-        <button
-          className={btnClass}
-          alt={this.state.showPersons}
-          onClick={this.togglePersonsHandler}>Toggle persons
-          </button>
-
+        <Cockpit
+          showPersons={this.state.showPersons}
+          persons={this.state.persons}
+          clicked={this.togglePersonsHandler} />
         {persons}
       </div>
-
     );
   }
 }
